@@ -1,0 +1,30 @@
+/* mediciones.page.scss */
+ion-list {
+    margin: 16px;
+  }
+  
+  ion-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  ion-title {
+    font-size: 1.4rem;
+  }
+  
+  ion-button {
+    --padding-start: 12px;
+    --padding-end: 12px;
+  }
+  ion-content {
+    --background: #f0f0f0;
+  }
+  
+  .boton-home {
+    --background: #3b82f6; /* Fondo azul */
+    color: white;
+    margin: 16px;
+    border-radius: 8px;
+  }
+  

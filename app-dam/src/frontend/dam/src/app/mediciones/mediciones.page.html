@@ -1,0 +1,22 @@
+<ion-header>
+    <ion-toolbar>
+      <ion-title>Mediciones</ion-title>
+      <ion-buttons slot="end">
+ 
+      </ion-buttons>
+      
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <ion-button expand="block" class="boton-home" (click)="volverAlHome()">Volver al Home</ion-button>
+    <ion-list>
+      <ion-item *ngFor="let medicion of mediciones">
+        <ion-label>
+          <h2>Fecha: {{ medicion.fecha | date: 'short' }}</h2>
+          <p>Valor: {{ medicion.valor }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  
