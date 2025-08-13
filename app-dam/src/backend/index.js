@@ -7,7 +7,7 @@ const cors = require('cors');
 var express = require('express');
 var app = express();
 var pool = require('./mysql-connector');
-const routerDispositivo = require('./routes/dispositivo')
+const routerDispositivo = require('./routes/dispositivos')
 
 var corsOptions = {
     origin: '*',

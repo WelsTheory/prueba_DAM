@@ -48,17 +48,31 @@ export class HomePage implements OnInit {
     try {
       const dispositivos = await this.dispositivoService.getDispositivos();
   
-      // Para cada dispositivo, traemos la última medición
+      // Para cada dispositivo, traemos la última medición y estado de válvula
       this.dispositivos = await Promise.all(
         dispositivos.map(async (d: Dispositivo) => {
+          let medicionActual = '—';
+          let estadoValvula = null;
+  
           try {
             const mediciones = await this.dispositivoService.getMediciones(d.dispositivoId);
-            const ultimaMedicion = mediciones.length > 0 ? mediciones[0].valor : '—';
-            return { ...d, medicionActual: ultimaMedicion };
+            medicionActual = mediciones.length > 0 ? mediciones[0].valor : '—';
           } catch (err) {
             console.error(`Error cargando mediciones para dispositivo ${d.dispositivoId}`, err);
-            return { ...d, medicionActual: '—' };
           }
+  
+          try {
+            const estadoResponse = await this.dispositivoService.getEstadoValvula(d.dispositivoId);
+            estadoValvula = estadoResponse.estado; // true o false
+          } catch (err) {
+            console.error(`Error cargando estado válvula para dispositivo ${d.dispositivoId}`, err);
+          }
+  
+          return { 
+            ...d, 
+            medicionActual, 
+            estadoValvula 
+          };
         })
       );
     } catch (error) {
@@ -76,6 +90,11 @@ export class HomePage implements OnInit {
   verMediciones(dispositivoId: number) {
     console.log(`Ver mediciones del dispositivo: ${dispositivoId}`);
     this.router.navigate([`/dispositivo`, dispositivoId, 'mediciones']);
+  }
+
+  verEncenderTodo(dispositivoId: number) {
+    console.log(`Encender todos dispositivo: ${dispositivoId}`);
+    this.router.navigate([`/dispositivo`, dispositivoId, 'encender']);
   }
   
 }

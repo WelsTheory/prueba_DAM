@@ -11,8 +11,11 @@
         *ngFor="let dispositivo of dispositivos">
 
         <ion-card class="device-card">
-          <img [src]="'assets/img/version1.png'" alt="Dispositivo"/>
-
+          <img 
+              [src]="dispositivo.estadoValvula 
+                    ? 'assets/img/version2.png' 
+                    : 'assets/img/version1.png'"  
+              alt="Dispositivo"/>
           <ion-card-header>
             <ion-card-title>{{ dispositivo.nombre }}</ion-card-title>
             <ion-card-subtitle>{{ dispositivo.ubicacion }}</ion-card-subtitle>
@@ -38,6 +41,18 @@
         </ion-card>
 
       </ion-col>
+    </ion-row>
+    <ion-row>
+      <div class="boton_on_all">
+        <ion-button fill="outline" size="small">
+          Encender Todos
+        </ion-button>
+      </div>
+      <div class="boton_off_all">
+        <ion-button fill="outline" size="small">
+          Apagar Todos
+        </ion-button>
+      </div>
     </ion-row>
   </ion-grid>
 </ion-content>

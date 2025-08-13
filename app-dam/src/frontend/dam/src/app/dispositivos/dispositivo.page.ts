@@ -62,9 +62,8 @@ export class DispositivoPage implements OnInit{
 
   async cargarDispositivo() {
     try {
-      this.dispositivo = await this.dispositivoService.getDispositivoById(
-        this.dispositivoId
-      );
+      this.dispositivo = await this.dispositivoService.getDispositivoById(this.dispositivoId);
+      console.log('Dispositivo cargado:', this.dispositivo);
     } catch (error) {
       console.error('Error al cargar el dispositivo:', error);
     }

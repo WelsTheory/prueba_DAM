@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
 import { DispositivoService } from '../services/dispositivo.service';
-styleUrls: ['./mediciones.page.scss'];
+
+// Ionic standalone imports
 import {
   IonContent,
   IonHeader,
@@ -10,14 +12,16 @@ import {
   IonList,
   IonItem,
   IonLabel,
+  IonButton,
+  IonButtons,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
+  IonIcon,
+  IonText
 } from '@ionic/angular/standalone';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { IonButton } from '@ionic/angular/standalone';
-import { IonButtons } from '@ionic/angular/standalone';
-
-
-
 
 @Component({
   selector: 'app-mediciones',
@@ -25,6 +29,7 @@ import { IonButtons } from '@ionic/angular/standalone';
   styleUrls: ['./mediciones.page.scss'],
   standalone: true,
   imports: [
+    CommonModule,
     IonContent,
     IonHeader,
     IonToolbar,
@@ -34,8 +39,14 @@ import { IonButtons } from '@ionic/angular/standalone';
     IonLabel,
     IonButton,
     IonButtons,
-    CommonModule,
-  ],
+    IonCard,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonCardContent,
+    IonIcon,
+    IonText
+  ]
 })
 export class MedicionesPage implements OnInit {
   dispositivoId!: number;
@@ -54,16 +65,17 @@ export class MedicionesPage implements OnInit {
 
   async cargarMediciones() {
     try {
-      this.mediciones = await this.dispositivoService.getMediciones(
-        this.dispositivoId
-      );
+      this.mediciones = await this.dispositivoService.getMediciones(this.dispositivoId);
     } catch (error) {
       console.error('Error al cargar las mediciones:', error);
     }
   }
 
-  volverAlHome() {
-  this.router.navigate(['/home']);
-}
-}
+  trackByFecha(index: number, medicion: any) {
+    return medicion.fecha;
+  }
 
+  volverAlHome() {
+    this.router.navigate(['/home']);
+  }
+}
