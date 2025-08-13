@@ -1,6 +1,6 @@
-const mysql = require('mysql')
+const mysql = require('mysql');
 
-const config = {
+const configMysql = {
     connectionLimit: 10,
     host: 'mysql-server',
     port: '3306',
@@ -9,25 +9,26 @@ const config = {
     database: 'DAM'
 }
 
-const pool = mysql.createPool(config)
+const pool = mysql.createPool(configMysql);
 
-pool.getConnection((err, conn) => {
+pool.getConnection((err, connection) => {
     if (err) {
-        switch(err.code) {
+        switch (err.code) {
             case 'PROTOCOL_CONNECTION_LOST':
-                console.error('La conexión a la BD se cerró.')
-                break
+                console.error('La conexion a la DB se cerró.');
+                break;
             case 'ER_CON_COUNT_ERROR':
-                console.error('La base de datos tiene muchas conexiones.')
-                break
+                console.error('La base de datos tiene muchas conexiones');
+                break;
             case 'ECONNREFUSED':
-                console.error('La conexión fue rechazada')
+                console.error('La conexion fue rechazada');
         }
     }
-    if (conn) {
-        console.log(conn)
-        conn.release()
+    if (connection) {
+        console.log(connection)
+        connection.release();
     }
-})
+    return;
+});
 
-module.exports = pool
+module.exports = pool;

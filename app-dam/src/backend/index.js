@@ -66,7 +66,7 @@ app.use('/dispositivo', routerDispositivo)
 //=======[ Main module code ]==================================================
 
 app.get('/', function(req, res, next) {
-    res.send({'mensaje': 'Base de datos DAM TP'}).status(200);
+    res.send({'mensaje': 'Hola DAM'}).status(200);
 });
 
 app.get('/devices', function (req, res) {

@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonChip, IonContent, IonHeader, IonIcon, IonLabel, IonTitle, IonToolbar, } from '@ionic/angular/standalone';
-//import { Observable, Subscription, fromEvent, interval } from 'rxjs';
+import { Observable, Subscription, fromEvent, interval } from 'rxjs';
 import { DispositivoService } from '../services/dispositivo.service';
 import { ActivatedRoute } from '@angular/router';
 import { Dispositivo } from '../interfaces/dispositivo';
@@ -28,7 +28,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 })
 export class DispositivoPage implements OnInit{
 
-  dispositivo: Dispositivo | null = null;
+  dispositivo!: Dispositivo;
   dispositivoId!: number;
   estadoValvula: boolean | null = null;
   ultimaMedicion: { fecha: string; valor: string } | null = null;
@@ -62,12 +62,9 @@ export class DispositivoPage implements OnInit{
 
   async cargarDispositivo() {
     try {
-      const data = await this.dispositivoService.getDispositivoById(this.dispositivoId);
-      console.log("Respuesta del servicio:", data);
-  
-      // Si la API devuelve algo como { Nombre: "Mi dispositivo" }
-      // asigna manualmente las propiedades a tu interfaz
-      this.dispositivo = data;
+      this.dispositivo = await this.dispositivoService.getDispositivoById(
+        this.dispositivoId
+      );
     } catch (error) {
       console.error('Error al cargar el dispositivo:', error);
     }

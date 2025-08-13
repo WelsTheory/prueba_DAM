@@ -45,9 +45,9 @@ INSERT INTO `Dispositivos` (`dispositivoId`, `nombre`, `ubicacion`, `electrovalv
 (1, 'Sensor 1', 'Patio', 1),
 (2, 'Sensor 2', 'Cocina', 2),
 (3, 'Sensor 3', 'Jardin Delantero', 3),
---(4, 'Sensor 4', 'Living', 4),
---(5, 'Sensor 5', 'Habitacion 1', 5),
---(6, 'Sensor 6', 'Habitacion 2', 6);
+(4, 'Sensor 4', 'Living', 4),
+(5, 'Sensor 5', 'Habitacion 1', 5),
+(6, 'Sensor 6', 'Habitacion 2', 6);
 
 -- --------------------------------------------------------
 

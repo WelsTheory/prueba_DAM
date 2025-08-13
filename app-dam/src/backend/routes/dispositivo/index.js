@@ -1,19 +1,11 @@
-/**
- * Configura el servidor Express:
- * - Define el puerto.
- * - Importa Express y utilidades para la base de datos.
- * - Inicializa la aplicación.
- * - Configura el middleware para parsear JSON en las peticiones entrantes.
- */
 const express = require('express')
 
-const app = express.Router()
+const routerDispositivo = express.Router()
 
-var utils = require('../../mysql-connector');
+var pool = require('../../mysql-connector');
 
-app.get('/', function(req, res) 
-{
-    utils.query('Select * from Dispositivos', function(err, result, fields) {
+routerDispositivo.get('/', function(req, res) {
+    pool.query('Select * from Dispositivos', function(err, result, fields) {
         if (err) {
             console.error('Error al consultar dispositivos:', err);
             return res.status(400).send(err); 
@@ -22,7 +14,7 @@ app.get('/', function(req, res)
     });
 })
 
-app.get('/:id', (req, res) => {
+routerDispositivo.get('/:id', (req, res) => {
     const dispositivoId = req.params.id;
 
     // Consulta para obtener el detalle del dispositivo y su válvula
@@ -33,7 +25,7 @@ app.get('/:id', (req, res) => {
         INNER JOIN Electrovalvulas e ON d.electrovalvulaId = e.electrovalvulaId
         WHERE d.dispositivoId = ?`;
 
-    utils.query(query, [dispositivoId], (err, result) => {
+    pool.query(query, [dispositivoId], (err, result) => {
         if (err) {
             console.error('Error al obtener el dispositivo:', err);
             return res.status(500).json({ error: 'Error al obtener el dispositivo' });
@@ -45,7 +37,7 @@ app.get('/:id', (req, res) => {
     });
 });
 
-app.post('/:id/valvula', (req, res) => {
+routerDispositivo.post('/:id/valvula', (req, res) => {
     const dispositivoId = req.params.id;
     const { apertura } = req.body; // apertura: 1 para abrir, 0 para cerrar
     const fecha = new Date();
@@ -57,7 +49,7 @@ app.post('/:id/valvula', (req, res) => {
         FROM Dispositivos
         WHERE dispositivoId = ?`;
 
-    utils.query(queryLog, [apertura, fecha, dispositivoId], (err, result) => {
+    pool.query(queryLog, [apertura, fecha, dispositivoId], (err, result) => {
         if (err) {
             console.error('Error al registrar el riego:', err);
             return res.status(500).json({ error: 'Error al registrar el riego' });
@@ -66,7 +58,7 @@ app.post('/:id/valvula', (req, res) => {
     });
 });
 
-app.get('/:id/mediciones', (req, res) => {
+routerDispositivo.get('/:id/mediciones', (req, res) => {
     const dispositivoId = req.params.id;
 
     const query = `
@@ -75,7 +67,7 @@ app.get('/:id/mediciones', (req, res) => {
         WHERE dispositivoId = ?
         ORDER BY fecha DESC`;
 
-    utils.query(query, [dispositivoId], (err, result) => {
+    pool.query(query, [dispositivoId], (err, result) => {
         if (err) {
             console.error('Error al obtener las mediciones:', err);
             return res.status(500).json({ error: 'Error al obtener las mediciones' });
@@ -84,14 +76,14 @@ app.get('/:id/mediciones', (req, res) => {
     });
 });
 
-app.post('/:id/abrir', (req, res) => {
+routerDispositivo.post('/:id/abrir', (req, res) => {
     const electrovalvulaId = req.params.id;
     const query = `
         INSERT INTO Log_Riegos (electrovalvulaId, apertura, fecha)
         VALUES (?, 1, NOW())
     `;
 
-    utils.query(query, [electrovalvulaId], (err, result) => {
+    pool.query(query, [electrovalvulaId], (err, result) => {
         if (err) {
             console.error('Error al abrir la válvula:', err);
             return res.status(500).send({ error: 'No se pudo abrir la válvula' });
@@ -100,14 +92,14 @@ app.post('/:id/abrir', (req, res) => {
     });
 });
 
-app.post('/:id/cerrar', (req, res) => {
+routerDispositivo.post('/:id/cerrar', (req, res) => {
     const electrovalvulaId = req.params.id;
     const query = `
         INSERT INTO Log_Riegos (electrovalvulaId, apertura, fecha)
         VALUES (?, 0, NOW())
     `;
 
-    utils.query(query, [electrovalvulaId], (err, result) => {
+    pool.query(query, [electrovalvulaId], (err, result) => {
         if (err) {
             console.error('Error al cerrar la válvula:', err);
             return res.status(500).send({ error: 'No se pudo cerrar la válvula' });
@@ -116,7 +108,7 @@ app.post('/:id/cerrar', (req, res) => {
     });
 });
 
-app.get('/:id/estado', (req, res) => {
+routerDispositivo.get('/:id/estado', (req, res) => {
     const electrovalvulaId = req.params.id;
     const query = `
         SELECT apertura
@@ -126,7 +118,7 @@ app.get('/:id/estado', (req, res) => {
         LIMIT 1
     `;
 
-    utils.query(query, [electrovalvulaId], (err, result) => {
+    pool.query(query, [electrovalvulaId], (err, result) => {
         if (err) {
             console.error('Error al obtener el estado de la válvula:', err);
             return res.status(500).send({ error: 'No se pudo obtener el estado' });
@@ -140,7 +132,7 @@ app.get('/:id/estado', (req, res) => {
     });
 });
 
-app.get('/:id/ultima-medicion', function (req, res) {
+routerDispositivo.get('/:id/ultima-medicion', function (req, res) {
     const dispositivoId = req.params.id;
 
     const query = `
@@ -151,7 +143,7 @@ app.get('/:id/ultima-medicion', function (req, res) {
         LIMIT 1
     `;
 
-    utils.query(query, [dispositivoId], function (err, result) {
+    pool.query(query, [dispositivoId], function (err, result) {
         if (err) {
             console.error('Error al obtener la última medición:', err);
             res.status(500).send({ error: 'Error al obtener la última medición' });
@@ -164,4 +156,4 @@ app.get('/:id/ultima-medicion', function (req, res) {
 });
 
 
-module.exports = app
+module.exports = routerDispositivo
